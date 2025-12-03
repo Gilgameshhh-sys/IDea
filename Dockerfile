@@ -1,28 +1,31 @@
-# 1. Imagen base de Python ligera
-FROM python:3.9-slim
+# 1. CAMBIO CLAVE: Usamos la imagen COMPLETA (sin "-slim")
+# Esto trae todos los compiladores necesarios para 'blis' y 'spacy'
+FROM python:3.9
 
-# 2. Variables de entorno para que Python no genere archivos temporales
+# 2. Variables de entorno
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-# 3. Instalamos dependencias del sistema necesarias
-RUN apt-get update && apt-get install -y --no-install-recommends gcc && rm -rf /var/lib/apt/lists/*
+# 3. Actualizamos pip (el instalador) para evitar errores de versiones viejas
+RUN pip install --upgrade pip
 
-# 4. Copiamos los requerimientos e instalamos las librerías
+# 4. Copiamos los requerimientos
 COPY requirements.txt .
+
+# 5. Instalamos las librerías
+# La imagen completa ya tiene lo necesario para compilar 'blis'
 RUN pip install --no-cache-dir -r requirements.txt
 
-# 5. DESCARGA DEL MODELO EN ESPAÑOL (Paso crítico)
-# Esto descarga el "cerebro" dentro de la imagen para que no falle al arrancar
+# 6. Descarga del modelo en Español
 RUN python -m spacy download es_core_news_lg
 
-# 6. Copiamos el resto del código (main.py)
+# 7. Copiamos el código
 COPY . .
 
-# 7. Exponemos el puerto 8080 (Estándar para Render/Cloud Run)
+# 8. Exponemos el puerto
 EXPOSE 8080
 
-# 8. Comando de arranque de la API
+# 9. Arrancamos
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
