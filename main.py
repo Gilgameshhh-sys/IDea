@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import List
+from fastapi.middleware.cors import CORSMiddleware  # <--- AGREGA ESTO
 import logging
 
 # Importaciones de Presidio y Spacy
@@ -111,4 +112,5 @@ async def secure_chat(request: SecureChatRequest):
         logger.error(f"Error procesando solicitud: {str(e)}")
 
         raise HTTPException(status_code=500, detail=str(e))
+
 
