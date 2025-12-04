@@ -19,7 +19,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # 6. Descarga del modelo en Español
-RUN python -m spacy download es_core_news_md
+RUN python -m spacy download es_core_news_sm
 
 # 7. Copiamos el código
 COPY . .
@@ -29,4 +29,5 @@ EXPOSE 8080
 
 # 9. Arrancamos
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
+
 
