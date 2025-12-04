@@ -74,7 +74,15 @@ class SafetyReport(BaseModel):
 class SecureChatResponse(BaseModel):
     ai_response: str
     safety_report: SafetyReport
-
+# --- AGREGA ESTE BLOQUE ---
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # "*" significa: permitir a todo el mundo (para desarrollo)
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+# --------------------------
 @app.get("/")
 def health_check():
     return {"status": "online", "engine": "Presidio Spanish Optimized"}
@@ -112,5 +120,6 @@ async def secure_chat(request: SecureChatRequest):
         logger.error(f"Error procesando solicitud: {str(e)}")
 
         raise HTTPException(status_code=500, detail=str(e))
+
 
 
