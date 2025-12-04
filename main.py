@@ -15,7 +15,7 @@ logger = logging.getLogger("secure-chat-api")
 # Configuración de Spacy en Español
 nlp_config = {
     "nlp_engine_name": "spacy",
-    "models": [{"lang_code": "es", "model_name": "es_core_news_lg"}],
+    "models": [{"lang_code": "es", "model_name": "es_core_news_md"}],
 }
 provider = NlpEngineProvider(nlp_configuration=nlp_config)
 
@@ -109,4 +109,5 @@ async def secure_chat(request: SecureChatRequest):
 
     except Exception as e:
         logger.error(f"Error procesando solicitud: {str(e)}")
+
         raise HTTPException(status_code=500, detail=str(e))
